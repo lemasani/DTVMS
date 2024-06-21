@@ -1,6 +1,7 @@
-import { fetchVenueList } from './../Components/Fetch'
+import { PostVenue, fetchVenueList } from './../Components/Fetch'
 import CreateVenueDialog from '../Components/CreateVenue';
 import EditVenueDialog from '../Components/EditVenueDialog';
+import axios from 'axios';
 
 
 
@@ -30,17 +31,57 @@ export default function Venues() {
   const [region, setRegion] = useState('');
   const [capacity, setCapacity] = useState('');
   const [address, setAddress] = useState('')
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState('');
 
-  //submit and validation for createVenueDialog
-  const handleCreateVenue = () =>{
-    if(region && capacity && image){
-      setShowVenueForm(false)
-      setRegion('')
-      setCapacity('')
-      setImage(null)
+  const upload_preset = import.meta.env.VITE_UPLOAD_PRESET
+
+
+  const handleImageChange = (e) => {
+    e.preventDefault()
+    const file = e.target.files[0];
+    if (!file) {
+      console.error('No file selected');
+      return;
     }
-  }
+  
+    // Check for supported file types
+    const supportedFileTypes = ['image/jpeg', 'image/png'];
+    if (!supportedFileTypes.includes(file.type)) {
+      console.error('Unsupported file type');
+      return;
+    }
+  
+    // Check for file size
+    const maxFileSize = 2 * 1024 * 1024; // 2MB
+    if (file.size > maxFileSize) {
+      console.error('File size exceeds the maximum limit');
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('cloud_name', 'dyanv91td')
+    formData.append('upload_preset', upload_preset); 
+  
+    axios.post('https://api.cloudinary.com/v1_1/dyanv91td/image/upload', formData)
+      .then(response => setImage(response.data.url.toString()))
+      .catch(err => {
+        console.error(err);
+        // Set the error in your component's state
+        // setError(err.message);
+      });
+  };
+  //submit and validation for createVenueDialog
+  const handleCreateVenue = async (e) => {
+    e.preventDefault();
+    if (!venueName || !district || !region || !capacity || !address || !image) {
+      alert('Please fill in all fields.');
+      return;
+    }
+  
+    await PostVenue(venueName, district, region, capacity, address, image);
+    fetchVenues();
+  };
 
   const fetchVenues = async () => {
     setIsLoading(true)
@@ -92,7 +133,7 @@ return (
       address={address}
       setAddress={setAddress}
       image={image}
-      setImage={setImage}
+      handleImageChange={handleImageChange}
       onSubmit={handleCreateVenue}
     />
     ) : (

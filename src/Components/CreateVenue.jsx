@@ -122,8 +122,7 @@ const CreateVenueDialog = ({
   setCapacity,
   address,
   setAddress,
-  image,
-  setImage,
+  handleImageChange,
   onSubmit,
 }) => {
   return (
@@ -165,7 +164,7 @@ const CreateVenueDialog = ({
           margin="dense"
           id="capacity"
           label="Capacity"
-          type="number"
+          type="text"
           fullWidth
           value={capacity}
           onChange={(e) => setCapacity(e.target.value)}
@@ -177,8 +176,7 @@ const CreateVenueDialog = ({
           label="Image"
           type="file"
           fullWidth
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
+          onChange={(e) => handleImageChange(e)}
         />
         <TextField
           autoFocus
@@ -210,11 +208,10 @@ CreateVenueDialog.propTypes = {
   setDistrict: PropTypes.func.isRequired,
   region: PropTypes.string.isRequired,
   setRegion: PropTypes.func.isRequired,
-  capacity: PropTypes.number.isRequired,
+  capacity: PropTypes.string.isRequired,
   setCapacity: PropTypes.func.isRequired,
   address: PropTypes.string.isRequired,
   setAddress: PropTypes.func.isRequired,
-  image: PropTypes.string.isRequired,
-  setImage: PropTypes.func.isRequired,
+  handleImageChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };

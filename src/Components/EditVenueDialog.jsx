@@ -68,6 +68,6 @@ export default EditVenueDialog;
 EditVenueDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  currentVenue: PropTypes.object.isRequired,
+  currentVenue: PropTypes.object,
   onUpdate: PropTypes.func.isRequired,
 };
