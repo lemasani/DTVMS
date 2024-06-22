@@ -8,6 +8,7 @@ import Register from './Pages/Register'
 import Dashboard from './Pages/Dashboard'
 import RootLayout from './Layout/RootLayout'
 import Venues from './Pages/Venues'
+import VenueDetails from './Pages/VenueDetails'
 
 
 const router = createBrowserRouter(
@@ -18,6 +19,7 @@ const router = createBrowserRouter(
 
       <Route path="/dashboard" element={<RootLayout><Dashboard /> </RootLayout>} />
       <Route path="/venues" element={<RootLayout><Venues /> </RootLayout>} />
+      <Route path="/venues/:id" element={<RootLayout><VenueDetails /> </RootLayout>} />
     </Route>
   )
 )

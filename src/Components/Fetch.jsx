@@ -48,3 +48,48 @@ export async function PostVenue(venueName, district, region, capacity, address, 
       }
 }
 
+export async function DeleteVenue(venueId){
+    try {
+        const id = venueId
+        const response = await axios.delete(`api/venue/${id}`);
+        console.log(response)
+        return response.status === 200;
+    } catch (error) {
+        console.log('something went wrong',error);
+        return false;
+    }
+}
+
+
+export async function FetchVenue(venueId){
+    try {
+        const id = venueId
+        const response = await axios.get(`api/venue/${id}`);
+        console.log(response.data.value)
+        return response.data.value;
+    } catch (error) {
+        console.log('something went wrong',error);
+        return false;
+    }
+}
+
+
+//sessions
+export async function PostSession(venueId, date, startTime, endTime){
+    try {
+        const response = await axios.post('api/session', {
+            date: date,
+            startTime: startTime,
+            endTime: endTime,
+            venueId: venueId
+        });
+    
+        if (response.status === 200) {
+          alert('Session created successfully');
+           // Refresh the venue list
+        }
+      } catch (error) {
+        console.error('Error creating venue: ', error);
+        alert('Error creating venue');
+      }
+}
