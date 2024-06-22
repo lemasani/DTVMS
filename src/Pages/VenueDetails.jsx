@@ -100,7 +100,14 @@ export default function VenueDetails() {
                         {venue.sessions.length === 0 ? (
                             <p>No sessions available</p>
                         ) : (
-                            <p>{venue.sessions}</p>
+                            venue.sessions.map(session => (
+                                <div key={session.id} className="session-card">
+                                    <h3>{session.name}</h3>
+                                    <p>Date: {session.date}</p>
+                                    <p>Start Time: {session.startTime}</p>
+                                    <p>End Time: {session.endTime}</p>
+                                </div>
+                            ))
                         )}
                         </div>
                     </Box>
