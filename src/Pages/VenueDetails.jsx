@@ -97,18 +97,21 @@ export default function VenueDetails() {
                             <AddIcon /> Create Session
                             </button>
                         </div>
-                        {venue.sessions.length === 0 ? (
-                            <p>No sessions available</p>
-                        ) : (
-                            venue.sessions.map(session => (
-                                <div key={session.id} className="session-card">
-                                    <h3>{session.name}</h3>
-                                    <p>Date: {session.date}</p>
-                                    <p>Start Time: {session.startTime}</p>
-                                    <p>End Time: {session.endTime}</p>
-                                </div>
-                            ))
-                        )}
+                        <div className="session-container mt-4 grid grid-cols-2 gap-3">
+                            {venue.sessions.length === 0 ? (
+                                <p>No sessions available</p>
+                            ) : (
+                                venue.sessions.map(session => (
+                                    <div key={session.id} className="session-card shadow p-2 bg-blue-400 rounded">
+                                        <h3>{session.name}</h3>
+                                        <p>Date: {session.date}</p>
+                                        <p>Start Time: {session.startTime}</p>
+                                        <p>End Time: {session.endTime}</p>
+                                    </div>
+                                ))
+                            )}
+
+                        </div>
                         </div>
                     </Box>
                     </Grid>
