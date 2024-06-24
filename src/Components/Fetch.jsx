@@ -8,7 +8,6 @@ export async function Login(username, password){
             username,
             password
         });
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Error logging in:', error);
@@ -34,7 +33,6 @@ export async function fetchVenueCount() {
 export async function fetchVenueList() {
     try {
         const response = await axios.get('api/venues');
-        console.log(response.data.value);
         return response.data.value;
     } catch (error) {
         console.error('Error fetching venue list:', error);
@@ -61,7 +59,6 @@ export async function PostVenue(venueName, district, region, capacity, address, 
           alert('Error creating venue');
         }
       } catch (error) {
-        console.error('Error creating venue: ', error);
         alert('Error creating venue');
       }
 }
@@ -70,7 +67,6 @@ export async function DeleteVenue(venueId){
     try {
         const id = venueId
         const response = await axios.delete(`api/venue/${id}`);
-        console.log(response)
         return response.status === 200;
     } catch (error) {
         console.log('something went wrong',error);
@@ -83,7 +79,6 @@ export async function FetchVenue(venueId){
     try {
         const id = venueId
         const response = await axios.get(`api/venue/${id}`);
-        console.log(response.data.value)
         return response.data.value;
     } catch (error) {
         console.log('something went wrong',error);
@@ -113,7 +108,6 @@ export async function DeleteSession(sessionId) {
     try {
         const id = sessionId
         const response = await axios.delete(`api/session/${id}`);
-        console.log(response)
         return response.status === 200;
     } catch (error) {
         console.log('something went wrong',error);
