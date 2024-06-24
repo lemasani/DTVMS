@@ -2,6 +2,8 @@ import { Box, Grid } from '@mui/material';
 import { useParams } from 'react-router-dom';
 //component
 import { FetchVenue, PostSession, DeleteSession } from '../Components/Fetch';
+import Message from '../Components/Message';
+
 import { useState, useEffect } from 'react';
 import { useAuth } from '../Utils/Auth';
 
@@ -23,17 +25,33 @@ export default function VenueDetails() {
     const [endTime, setEndTime] = useState('');
     const [openCreateSessionDialog, setOpenCreateSessionDialog] = useState(false);
 
+    const [message, setMessage] = useState('');
+    const [messageType, setMessageType] = useState('');
 
     useEffect(() => {
         const fetchVenue = async () => {
-            setIsLoading(true)
+          setIsLoading(true);
+          try {
             const fetchedVenue = await FetchVenue(id);
-            setVenue(fetchedVenue);
-            setIsLoading(false)
+            if (fetchedVenue) {
+              setVenue(fetchedVenue);
+              setMessage('Venue Details fetched successfully');
+              setMessageType('success');
+            } else {
+              // Handle fetch error (e.g., venue not found)
+              setMessage('Failed to fetch venue details');
+              setMessageType('error');
+            }
+          } catch (error) {
+            setMessage(`Error: ${error.message}`);
+            setMessageType('error');
+          } finally {
+            setIsLoading(false);
+          }
         };
-
+    
         fetchVenue();
-    }, [id]);
+      }, [id]);
 
     if (!venue) {
         return (
@@ -88,28 +106,35 @@ export default function VenueDetails() {
             setIsLoading(true)
             console.log('startTime',startTime)
             // Now call PostSession with the formatted ISO date-time string and formatted times
-            const success = PostSession(venue.id, isoDateTime, formattedStartTime, formattedEndTime);
+            const {success, message} = PostSession(venue.id, isoDateTime, formattedStartTime, formattedEndTime);
             setIsLoading(false)
             setOpenCreateSessionDialog(false)
             if(success){
+                setMessageType('success')
                 refreshVenueDetails();
-
+            }else{
+                setMessageType('error')
             }
+            setMessage(message)
            
         }
 
         const handleDeleteSession = async (sessionId) =>{
             setIsLoading(true)
-            const success = await DeleteSession(sessionId);
+            const { success, message } = await DeleteSession(sessionId);
+            
             setIsLoading(false)
             if(success){
                 refreshVenueDetails()
             }
+            setMessage(message);
+            setMessageType(success ? 'success' : 'error');
             console.log('sessionId',sessionId);
         }
 
     return (
         <>
+            {message && <Message message={message} type={messageType} />}
             {
                 !isLoading ? (
                     <Box sx={{ flexGrow: 1 }}>

@@ -97,20 +97,19 @@ export async function PostSession(venueId, date, startTime, endTime){
             venueId: venueId
         });
     
-        return response.status === 200
-      } catch (error) {
-        console.error('Error creating venue: ', error);
-        alert('Error creating venue');
-      }
+        return { success: response.status === 200, message: 'Session created successfully!' };
+    } catch (error) {
+        console.error('Error creating session: ', error);
+        return { success: false, message: 'Error creating session' };
+    }
 }
 
 export async function DeleteSession(sessionId) {
     try {
-        const id = sessionId
-        const response = await axios.delete(`api/session/${id}`);
-        return response.status === 200;
+        const response = await axios.delete(`api/session/${sessionId}`);
+        return { success: response.status === 200, message: 'Session deleted successfully!' };
     } catch (error) {
-        console.log('something went wrong',error);
-        return false;
+        console.log('something went wrong', error);
+        return { success: false, message: 'Error deleting session' };
     }
 }
