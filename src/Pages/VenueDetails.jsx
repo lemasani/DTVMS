@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 //component
 import { FetchVenue, PostSession, DeleteSession } from '../Components/Fetch';
 import { useState, useEffect } from 'react';
+import { useAuth } from '../Utils/Auth';
 
 //ICONS
 import AddIcon from '@mui/icons-material/Add';
@@ -10,6 +11,8 @@ import CreateSessionDialog from '../Components/CreateSession';
 import Loader from '../Components/Loader';
 
 export default function VenueDetails() {
+    useAuth()
+
     const [isLoading, setIsLoading] = useState(false)
     const LoaderSize = 60
     const { id } = useParams();

@@ -1,9 +1,13 @@
 import axios from './../Axios/axios'
 
 //login and authenication
-export async function Login(){
+export async function Login(username, password){
     try {
-        const response = await axios.get('/api/admin/authenticate');
+        // Assuming the API expects credentials as JSON in the request body
+        const response = await axios.post('/api/admin/authenticate', {
+            username,
+            password
+        });
         console.log(response.data);
         return response.data;
     } catch (error) {

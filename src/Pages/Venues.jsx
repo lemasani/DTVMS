@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../Utils/Auth';
 
 //ICONS
 import AddIcon from '@mui/icons-material/Add';
@@ -14,6 +15,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import Loader from '../Components/Loader';
 
 export default function Venues() {
+  useAuth()
+
   const [venues, setVenues] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showVenueForm, setShowVenueForm] = useState(false);
