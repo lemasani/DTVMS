@@ -1,5 +1,19 @@
 import axios from './../Axios/axios'
 
+//login and authenication
+export async function Login(){
+    try {
+        const response = await axios.get('/api/admin/authenticate');
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error logging in:', error);
+        return null;
+    }
+}
+
+
+
 // Function to fetch the number of venues
 export async function fetchVenueCount() {
     try {
@@ -84,15 +98,21 @@ export async function PostSession(venueId, date, startTime, endTime){
             venueId: venueId
         });
     
-        if (response.status === 200) {
-            const updatedVenueDetails = await FetchVenue(venueId);
-
-            console.log('Updated Venue Details:', updatedVenueDetails);
-            alert('Session created successfully');
-            return updatedVenueDetails
-        }
+        return response.status === 200
       } catch (error) {
         console.error('Error creating venue: ', error);
         alert('Error creating venue');
       }
+}
+
+export async function DeleteSession(sessionId) {
+    try {
+        const id = sessionId
+        const response = await axios.delete(`api/session/${id}`);
+        console.log(response)
+        return response.status === 200;
+    } catch (error) {
+        console.log('something went wrong',error);
+        return false;
+    }
 }

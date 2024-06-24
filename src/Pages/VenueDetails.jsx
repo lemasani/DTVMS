@@ -1,7 +1,7 @@
 import { Box, Grid } from '@mui/material';
 import { useParams } from 'react-router-dom';
 //component
-import { FetchVenue, PostSession } from '../Components/Fetch';
+import { FetchVenue, PostSession, DeleteSession } from '../Components/Fetch';
 import { useState, useEffect } from 'react';
 
 //ICONS
@@ -85,12 +85,24 @@ export default function VenueDetails() {
             setIsLoading(true)
             console.log('startTime',startTime)
             // Now call PostSession with the formatted ISO date-time string and formatted times
-            PostSession(venue.id, isoDateTime, formattedStartTime, formattedEndTime);
+            const success = PostSession(venue.id, isoDateTime, formattedStartTime, formattedEndTime);
             setIsLoading(false)
             setOpenCreateSessionDialog(false)
+            if(success){
+                refreshVenueDetails();
 
-            refreshVenueDetails();
+            }
            
+        }
+
+        const handleDeleteSession = async (sessionId) =>{
+            setIsLoading(true)
+            const success = await DeleteSession(sessionId);
+            setIsLoading(false)
+            if(success){
+                refreshVenueDetails()
+            }
+            console.log('sessionId',sessionId);
         }
 
     return (
@@ -141,7 +153,7 @@ export default function VenueDetails() {
                                                 <p className='flex justify-between'><span className='font-bold'>End Time:</span>{session.endTime}</p>
                                                 <p className='flex justify-between'><span className='font-bold'>Capacity:</span> {session.capacity}</p>
                                                 <div className="button-container flex justify-between">
-                                                    <button className='btn bg-green-400 rounded p-1'>Edit</button>
+                                                    <button className='btn bg-red-400 rounded p-1' onClick={() => handleDeleteSession(session.id)}>Delete</button>
                                                     <button className='btn bg-blue-400 rounded p-1 text-white'>Booked users</button>
                                                 </div>
                                             </div>
