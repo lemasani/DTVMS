@@ -85,8 +85,11 @@ export async function PostSession(venueId, date, startTime, endTime){
         });
     
         if (response.status === 200) {
-          alert('Session created successfully');
-           // Refresh the venue list
+            const updatedVenueDetails = await FetchVenue(venueId);
+
+            console.log('Updated Venue Details:', updatedVenueDetails);
+            alert('Session created successfully');
+            return updatedVenueDetails
         }
       } catch (error) {
         console.error('Error creating venue: ', error);

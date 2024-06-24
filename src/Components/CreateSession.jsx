@@ -8,6 +8,8 @@ import {
     Button,
     } from '@mui/material';
 
+   
+
 const CreateSessionDialog = ({
     open,
     onClose,
@@ -66,7 +68,16 @@ const CreateSessionDialog = ({
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
             />
-            
+        {/* <DateTimePicker
+          onChange={setStartTime}
+          value={new Date(startTime)}
+          format="y-MM-dd HH:mm:ss"
+        />
+        <DateTimePicker
+          onChange={setEndTime}
+          value={new Date(endTime)}
+          format="y-MM-dd HH:mm:ss"
+        /> */}
         </DialogContent>
         <DialogActions>
             <Button onClick={onClose}>Cancel</Button>

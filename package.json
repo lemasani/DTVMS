@@ -15,9 +15,13 @@
     "@mui/icons-material": "^5.15.20",
     "@mui/material": "^5.15.20",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@mui/x-date-pickers": "^7.7.1",
     "axios": "^1.7.2",
+    "dayjs": "^1.11.11",
     "dotenv": "^16.4.5",
+    "ldrs": "^1.0.2",
     "react": "^18.2.0",
+    "react-datetime-picker": "^6.0.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",
     "styled-components": "^6.1.11"

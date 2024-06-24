@@ -11,6 +11,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import Loader from '../Components/Loader';
 
 export default function Venues() {
   const [venues, setVenues] = useState([]);
@@ -165,7 +166,11 @@ export default function Venues() {
           </div>
           <div className="venue-grid container m-4">
             {isLoading ? (
-              <p>Loading...</p>
+              <div className="flex justify-center">
+                <div className="loader p-20 w-50">
+                <Loader  size="58" speed="1.75" color="blue" message="Loading..." />
+                </div>
+              </div>
             ) : (
               <table className="table-auto w-full">
                 <thead>

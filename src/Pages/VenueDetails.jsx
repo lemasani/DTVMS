@@ -7,8 +7,11 @@ import { useState, useEffect } from 'react';
 //ICONS
 import AddIcon from '@mui/icons-material/Add';
 import CreateSessionDialog from '../Components/CreateSession';
+import Loader from '../Components/Loader';
 
 export default function VenueDetails() {
+    const [isLoading, setIsLoading] = useState(false)
+    const LoaderSize = 60
     const { id } = useParams();
     const [venue, setVenue] = useState(null);
 
@@ -20,15 +23,23 @@ export default function VenueDetails() {
 
     useEffect(() => {
         const fetchVenue = async () => {
-        const fetchedVenue = await FetchVenue(id);
-        setVenue(fetchedVenue);
+            setIsLoading(true)
+            const fetchedVenue = await FetchVenue(id);
+            setVenue(fetchedVenue);
+            setIsLoading(false)
         };
 
         fetchVenue();
     }, [id]);
 
     if (!venue) {
-        return <div>Loading...</div>;
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <div className="loader p-20 w-50">
+                    <Loader size={LoaderSize} />
+                </div>
+            </div>
+        );
     }
 
    
@@ -48,6 +59,13 @@ export default function VenueDetails() {
         return time;
     }
 
+    const refreshVenueDetails = async () => {
+        setIsLoading(true)
+        const fetchedVenue = await FetchVenue(id);
+        setVenue(fetchedVenue);
+        setIsLoading(false)
+    };
+
     const handleSubmitSession = () => {
             if (!date) {
             console.error('Date is empty');
@@ -64,59 +82,87 @@ export default function VenueDetails() {
             console.log(isoDateTime); // Logs the date and time in ISO format
             console.log(formattedStartTime, formattedEndTime);
         
+            setIsLoading(true)
+            console.log('startTime',startTime)
             // Now call PostSession with the formatted ISO date-time string and formatted times
             PostSession(venue.id, isoDateTime, formattedStartTime, formattedEndTime);
+            setIsLoading(false)
+            setOpenCreateSessionDialog(false)
+
+            refreshVenueDetails();
+           
         }
 
     return (
         <>
-            <Box sx={{ flexGrow: 1 }}>
-                <Grid container spacing={2}>
-                    <Grid item xs={4}>
-                    <Box sx={{ p: 2, bgcolor: 'background.paper' }}>
-                        <div className="venue-detaiCodels flex flex-col p-2">
-                        <h1 className="font-bold p-2">Venue Name: {venue.name}</h1>
-                        <img src={venue.imageUrl} alt={venue.name} />
+            {
+                !isLoading ? (
+                    <Box sx={{ flexGrow: 1 }}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={4}>
+                            <Box sx={{ p: 2, bgcolor: 'background.paper' }}>
+                                <div className="venue-detaiCodels flex flex-col p-2">
+                                <img src={venue.imageUrl} alt={venue.name} />
+                                <h1 className="font-bold p-2">Venue: {venue.name}</h1>
 
-                        <span className="p-2">Capacity: {venue.capacity}</span>
-                        <div className="address flex gap-2 p-2">
-                            <span>District: {venue.district}</span>
-                            <span>Region: {venue.region}</span>
-                        </div>
-                        </div>
-                    </Box>
-                    </Grid>
-                    <Grid item xs={8}>
-                    <Box sx={{ p: 2, bgcolor: 'background.paper' }}>
-                        <div className="venue-session container mx-auto p-4">
-                        <div className="sessions flex justify-between">
-                            <h2 className="font-bold">Sessions:</h2>
-                            <button className="btn bg-blue-700 p-2 text-white rounded"
-                                onClick={handleOpenCreateSessionDialog}
-                            >
-                            <AddIcon /> Create Session
-                            </button>
-                        </div>
-                        <div className="session-container mt-4 grid grid-cols-2 gap-3">
-                            {venue.sessions.length === 0 ? (
-                                <p>No sessions available</p>
-                            ) : (
-                                venue.sessions.map(session => (
-                                    <div key={session.id} className="session-card shadow p-2 bg-blue-400 rounded">
-                                        <h3>{session.name}</h3>
-                                        <p>Date: {session.date}</p>
-                                        <p>Start Time: {session.startTime}</p>
-                                        <p>End Time: {session.endTime}</p>
-                                    </div>
-                                ))
-                            )}
+                                <span className="p-2">Capacity: {venue.capacity}</span>
+                                <div className="address flex gap-2 p-2">
+                                    <span>location: {venue.district}, {venue.region}</span>
+                                </div>
+                                </div>
+                            </Box>
+                            </Grid>
+                            <Grid item xs={8}>
+                            <Box sx={{ p: 2, bgcolor: 'background.paper' }}>
+                                <div className="venue-session container mx-auto p-4">
+                                <div className="sessions flex justify-between">
+                                    <h2 className="font-bold">Sessions:</h2>
+                                    <button className="btn bg-blue-700 p-2 text-white rounded"
+                                        onClick={handleOpenCreateSessionDialog}
+                                    >
+                                        {
+                                            isLoading? (
+                                                <Loader />
+                                            ) : (
+                                                <AddIcon />
+                                            )
+                                        }
+                                        Create Session
+                                    </button>
+                                </div>
+                                <div className="session-container mt-4 grid grid-cols-2 gap-3">
+                                    {venue.sessions.length === 0 ? (
+                                        <p>No sessions available</p>
+                                    ) : (
+                                        venue.sessions.map(session => (
+                                            <div key={session.id} className="session-card shadow p-2 bg-blue-100 rounded">
+                                                <p className='flex justify-between'><span className='font-bold'>Date:</span> {new Date(session.date).toDateString()}</p>
+                                                <p className='flex justify-between'><span className='font-bold'>Start Time:</span> {session.startTime}</p>
+                                                <p className='flex justify-between'><span className='font-bold'>End Time:</span>{session.endTime}</p>
+                                                <p className='flex justify-between'><span className='font-bold'>Capacity:</span> {session.capacity}</p>
+                                                <div className="button-container flex justify-between">
+                                                    <button className='btn bg-green-400 rounded p-1'>Edit</button>
+                                                    <button className='btn bg-blue-400 rounded p-1 text-white'>Booked users</button>
+                                                </div>
+                                            </div>
+                                        ))
+                                    )}
 
-                        </div>
-                        </div>
+                                </div>
+                                </div>
+                            </Box>
+                            </Grid>
+                        </Grid>
                     </Box>
-                    </Grid>
-                </Grid>
-            </Box>
+
+                ) : (
+                    <div className="flex justify-center">
+                    <div className="loader p-20 w-50">
+                    <Loader  size="58" speed="1.75" color="blue" message="Loading..." />
+                    </div>
+                </div>
+                )
+            }
             
             {
                     openCreateSessionDialog && (
