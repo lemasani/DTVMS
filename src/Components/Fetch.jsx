@@ -15,6 +15,26 @@ export async function Login(username, password){
     }
 }
 
+//venue analysis 
+
+export async function venueUtilization(){
+    try {
+        const response = await axios.get('/api/venue-utilizations')
+        return response.data.value
+    } catch (error) {
+        console.log('Error fetching venue Utilzation', error);
+    }
+}
+
+export async function bookStatusCounts(){
+    try {
+        const response = await axios.get('/api/venue-booking-status-counts')
+        return response.data.value
+    } catch (error) {
+        console.log('Error fetching booking staus counts');
+    }
+}
+
 
 
 // Function to fetch the number of venues

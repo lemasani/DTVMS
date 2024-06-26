@@ -30,7 +30,7 @@
         }
     }, [open, sessionId]);
 
-    if (isLoading) { // Step 4: Conditionally render the Loader component
+    if (isLoading) { 
         return <Loader message="Loading booked users..." />;
     }
 
