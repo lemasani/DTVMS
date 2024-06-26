@@ -1,4 +1,5 @@
 import { DeleteVenue, PostVenue, fetchVenueList } from './../Components/Fetch';
+import Message from '../Components/Message';
 import CreateVenueDialog from '../Components/CreateVenue';
 import EditVenueDialog from '../Components/EditVenueDialog';
 import axios from 'axios';
@@ -24,6 +25,10 @@ export default function Venues() {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [currentVenue, setCurrentVenue] = useState(null);
 
+  // Additional state for managing messages
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
+
   //states for createVenueDialog
   const [venueName, setVenueName] = useState('');
   const [district, setDistrict] = useState('');
@@ -38,21 +43,24 @@ export default function Venues() {
     e.preventDefault();
     const file = e.target.files[0];
     if (!file) {
-      console.error('No file selected');
+      setMessage('No file selected');
+      setMessageType('error');
       return;
     }
 
     // Check for supported file types
     const supportedFileTypes = ['image/jpeg', 'image/png'];
     if (!supportedFileTypes.includes(file.type)) {
-      console.error('Unsupported file type');
+      setMessage('Unsupported file type');
+      setMessageType('error');
       return;
     }
 
     // Check for file size
     const maxFileSize = 2 * 1024 * 1024; // 2MB
     if (file.size > maxFileSize) {
-      console.error('File size exceeds the maximum limit');
+      setMessage('File size exceeds the maximum limit');
+      setMessageType('error');
       return;
     }
 
@@ -63,18 +71,22 @@ export default function Venues() {
 
     axios
       .post('https://api.cloudinary.com/v1_1/dyanv91td/image/upload', formData)
-      .then((response) => setImage(response.data.url.toString()))
+      .then((response) => {
+        setImage(response.data.url.toString())
+        setMessage('Image uploaded successfully');
+        setMessageType('success');
+      })
       .catch((err) => {
-        console.error(err);
-        // Set the error in your component's state
-        // setError(err.message);
+        setMessage(`Error uploading image: ${err.message}`);
+        setMessageType('error');
       });
   };
   //submit and validation for createVenueDialog
   const handleCreateVenue = async (e) => {
     e.preventDefault();
     if (!venueName || !district || !region || !capacity || !address || !image) {
-      alert('Please fill in all fields.');
+      setMessage('Please fill in all fields.');
+      setMessageType('error');
       return;
     }
 
@@ -87,8 +99,12 @@ export default function Venues() {
     try {
       const venues = await fetchVenueList();
       setVenues(venues);
+      setMessage('Venue fetched successfully')
+      setMessageType('success')
     } catch (error) {
       console.error('Error fetching data: ', error);
+      setMessage('Error fetching data')
+      setMessageType('error')
     }
     setIsLoading(false);
   };
@@ -113,10 +129,16 @@ export default function Venues() {
   };
 
   const handleDeleteClick = async (venueId) => {
-    console.log('Delete Venue', venueId);
     const success = await DeleteVenue(venueId);
     if (success) {
         setVenues(venues.filter(venue => venue.id !== venueId));
+        setMessage('Venue deleted successfully');
+        setMessageType('success');
+        
+    }else {
+      // Set an error message if the deletion was unsuccessful
+      setMessage('Error deleting venue. Please try again.');
+      setMessageType('error');
     }
 };
 
@@ -128,6 +150,7 @@ export default function Venues() {
 
   return (
     <div className="container">
+      {message && <Message type={messageType} message={message} />}
       <div className="heading flex justify-between p-10">
         <h1 className="text-lg font-bold">Venues</h1>
         <button
